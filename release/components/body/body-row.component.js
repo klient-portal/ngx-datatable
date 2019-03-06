@@ -124,8 +124,10 @@ var DataTableBodyRowComponent = /** @class */ (function () {
     DataTableBodyRowComponent.prototype.calcStylesByGroup = function (group) {
         var widths = this._columnGroupWidths;
         var offsetX = this.offsetX;
+        var scrollbarOffset = 17; // default scrollbar width
+        var maskOffset = 13; // space for masking content near pinned columns
         var styles = {
-            width: widths[group] + "px"
+            width: widths[group] + "px;"
         };
         if (group === 'left') {
             utils_1.translateXY(styles, offsetX, 0);
@@ -134,7 +136,13 @@ var DataTableBodyRowComponent = /** @class */ (function () {
             var bodyWidth = parseInt(this.innerWidth + '', 0);
             var totalDiff = widths.total - bodyWidth;
             var offsetDiff = totalDiff - offsetX;
-            var offset = (offsetDiff + this.scrollbarHelper.width) * -1;
+            var offset = 0;
+            if (totalDiff > 0) {
+                offset = (offsetDiff - maskOffset) * -1;
+            }
+            else {
+                offset = (offsetDiff + scrollbarOffset) * -1;
+            }
             utils_1.translateXY(styles, offset, 0);
         }
         return styles;
